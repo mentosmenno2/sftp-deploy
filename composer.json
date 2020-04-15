@@ -1,0 +1,41 @@
+{
+    "name": "mentosmenno2/sftp-deploy",
+    "description": "Package to deploy projects to an SFTP server",
+    "type": "library",
+    "authors": [
+        {
+            "name": "mentosmenno2",
+            "email": "mentosmenno2@hotmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "url": "https://github.com/mentosmenno2/coding-standards.git",
+            "type": "git"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Mentosmenno2\\SFTPDeploy\\": "app/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "mentosmenno2/coding-standards": "^1.0"
+    },
+    "scripts": {
+        "test": [
+            "composer validate",
+            "phpcs"
+        ],
+        "fix" : [
+            "phpcbf"
+        ]
+    },
+    "bin": [
+        "bin/sftp-deploy"
+    ]
+}

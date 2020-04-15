@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="SFTP Deploy">
+	<description>Mentosmenno2 SFTP Deploy ruleset</description>
+	<config name="testVersion" value="7.1-"/>
+	<file>./app</file>
+
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+
+	<rule ref="PHPCompatibility"/>
+	<rule ref="Mentosmenno2-Laravel"/>
+
+</ruleset>

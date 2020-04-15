@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+
+if (is_file(__DIR__.'/../autoload.php') === true) {
+    include_once __DIR__.'/../autoload.php';
+}
+
+$app   = new Mentosmenno2\SFTPDeploy\App();
+$exitCode = $app->run();
+exit($exitCode);
