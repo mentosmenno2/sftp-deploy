@@ -33,6 +33,9 @@
         ],
         "fix" : [
             "phpcbf"
+		],
+		"sftp-deploy" : [
+            "sftp-deploy"
         ]
     },
     "bin": [

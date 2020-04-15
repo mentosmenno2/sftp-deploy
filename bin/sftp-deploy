@@ -3,6 +3,8 @@
 
 if (is_file(__DIR__.'/../autoload.php') === true) {
     include_once __DIR__.'/../autoload.php';
+} elseif (is_file(__DIR__.'/../vendor/autoload.php') === true) {
+    include_once __DIR__.'/../vendor/autoload.php';
 }
 
 $app   = new Mentosmenno2\SFTPDeploy\App();
