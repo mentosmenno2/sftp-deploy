@@ -79,7 +79,8 @@ class Config
 		return array_merge($default, $fromFile);
 	}
 
-	private function getFileName(): string {
+	private function getFileName(): string
+	{
 		$pathUtil = new PathUtil();
 		$fileName = $pathUtil->trailingSlashSystemPath($this->basePath) . Config::FILENAMME;
 		return $fileName;
