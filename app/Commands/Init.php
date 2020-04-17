@@ -36,7 +36,7 @@ class Init
 		$outputUtil = new OutputUtil();
 
 		$json = json_encode($config->getDefaultConfig(), JSON_PRETTY_PRINT);
-		$fileName = $pathUtil->trailingSlashPath($config->basePath) . Config::FILENAMME;
+		$fileName = $pathUtil->trailingSlashSystemPath($config->basePath) . Config::FILENAMME;
 
 		$bytes = file_put_contents($fileName, $json);
 		if (! $bytes) {

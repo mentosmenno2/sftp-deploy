@@ -10,9 +10,9 @@ class Path
 		return $string . '/';
 	}
 
-	public function trailingSlashPath(string $string): string
+	public function trailingSlashSystemPath(string $string): string
 	{
-		$string = $this->unTrailingSlashPath($string);
+		$string = $this->unTrailingSlashSystemPath($string);
 		return $string . DIRECTORY_SEPARATOR;
 	}
 
@@ -21,7 +21,7 @@ class Path
 		return rtrim($string, '/');
 	}
 
-	public function unTrailingSlashPath(string $string): string
+	public function unTrailingSlashSystemPath(string $string): string
 	{
 		return rtrim($string, DIRECTORY_SEPARATOR);
 	}
