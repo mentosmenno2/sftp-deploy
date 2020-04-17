@@ -11,7 +11,8 @@ class Config
 	public const FILENAMME = 'sftp-deploy.config.json';
 
 	private $cliArgs = [];
-	public $basePath;
+	private $basePath;
+	private $data;
 
 	public function __construct(array $cliArgs = [], $dieOnUnknownArg = true)
 	{
@@ -74,9 +75,23 @@ class Config
 
 	public function get(): array
 	{
-		$default = $this->getDefault();
-		$fromFile = $this->getFromFile();
-		return array_merge($default, $fromFile);
+		if (! $this->data) {
+			$default = $this->getDefault();
+			$fromFile = $this->getFromFile();
+			$combined = array_merge($default, $fromFile);
+			$this->data = $combined;
+		}
+
+		return $this->data;
+	}
+
+	public function getItem(string $item)
+	{
+		$data = $this->get();
+		if (! array_key_exists($item, $data)) {
+			return null;
+		}
+		return $data[$item];
 	}
 
 	private function getFileName(): string
