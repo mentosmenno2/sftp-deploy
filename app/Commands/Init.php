@@ -21,7 +21,7 @@ class Init
 	 */
 	protected $response;
 
-	public function construct(Config $config)
+	public function __construct(Config $config)
 	{
 		$this->config = $config;
 		$this->response = new CommandResponse();
