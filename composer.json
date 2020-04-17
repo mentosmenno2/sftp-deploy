@@ -1,7 +1,8 @@
 {
     "name": "mentosmenno2/sftp-deploy",
     "description": "Package to deploy projects to an SFTP server",
-    "type": "library",
+	"type": "library",
+	"license": "MIT",
     "authors": [
         {
             "name": "mentosmenno2",
