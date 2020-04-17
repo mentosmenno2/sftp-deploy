@@ -7,24 +7,11 @@ use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
 
-class Init
+class Init extends BaseCommand
 {
-	/**
-	 * The configuration object.
-	 *
-	 * @var Mentosmenno2\SFTPDeploy\Config
-	 */
-	private $config;
-
-
-	public function __construct(Config $config)
-	{
-		$this->config = $config;
-	}
-
 	public function run(): CommandResponse
 	{
-		$response = new CommandResponse();
+		$response = parent::run();
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 

@@ -33,11 +33,17 @@ class Config
 	private function getDefault(): array
 	{
 		return [
-			'directory_name' => 'deployments',
+			'deployments_directory' => 'deployments',
+			'use_deployment_subdirectory' => true,
 			'run_before' => [],
 			'repo_clone_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
 			'run_after' => [],
 		];
+	}
+
+	public function fileExists(): bool
+	{
+		return file_exists($this->getFileName());
 	}
 
 	private function getFromFile(): array
@@ -97,7 +103,12 @@ class Config
 	private function getFileName(): string
 	{
 		$pathUtil = new PathUtil();
-		$fileName = $pathUtil->trailingSlashSystemPath($this->basePath) . Config::FILENAMME;
+		$fileName = $pathUtil->trailingSlashSystemPath($this->getBasePath()) . Config::FILENAMME;
 		return $fileName;
+	}
+
+	public function getBasePath(): string
+	{
+		return $this->basePath;
 	}
 }
