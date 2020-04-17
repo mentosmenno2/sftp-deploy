@@ -38,9 +38,14 @@ class Init
 		$json = json_encode($config->getDefaultConfig(), JSON_PRETTY_PRINT);
 		$fileName = $pathUtil->trailingSlashSystemPath($config->basePath) . Config::FILENAMME;
 
-		$bytes = file_put_contents($fileName, $json);
-		if (! $bytes) {
-			$this->response->addError('Could not create configuration file');
+		if ( ! file_exists($fileName) ) {
+			$bytes = file_put_contents($fileName, $json);
+			if (! $bytes) {
+				$this->response->addError('Could not create configuration file');
+				return $this->response;
+			}
+		} else {
+			$this->response->addWarning('Did not create config file, file already exists.');
 			return $this->response;
 		}
 

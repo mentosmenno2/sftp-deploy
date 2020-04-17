@@ -6,16 +6,16 @@ class Output
 {
 	public function printError(string $message): void
 	{
-		$this->printLine('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-		$this->printLine($message);
-		$this->printLine('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+		$this->printLine('##########################################');
+		$this->printLine('ERROR: ' . $message);
+		$this->printLine('##########################################');
 	}
 
 	public function printWarning(string $message): void
 	{
-		$this->printLine('!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#');
-		$this->printLine($message);
-		$this->printLine('!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#');
+		$this->printLine('##########################################');
+		$this->printLine('WARNING: ' . $message);
+		$this->printLine('##########################################');
 	}
 
 	public function printNotification(string $message): void

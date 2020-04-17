@@ -8,9 +8,13 @@ use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 
 class App
 {
-	const EXIT_CODE_SUCCESS = 0;
-	const EXIT_CODE_WARNING = 1;
-	const EXIT_CODE_ERROR = 2;
+	public const EXIT_CODE_SUCCESS = 0;
+	public const EXIT_CODE_WARNING = 1;
+	public const EXIT_CODE_ERROR = 2;
+
+	private const COMMANDS = [
+		'init' => InitCommand::class
+	];
 
 	/**
 	 * The base path of the project installation.
@@ -33,26 +37,29 @@ class App
 
 	public function run(): int
 	{
+		// Set config
 		$this->config = new Config();
 		$cliArgs = $this->config->getCliArgs();
 
-		$command = null;
 		$command_response = new CommandResponse();
+
+		// Check if command is given
 		if (!isset($cliArgs[0])) {
 			$command_response->addError('No command chosen.');
 			return $this->handleResponse($command_response);
 		}
 
-		switch ($cliArgs[0]) {
-			case 'init':
-				$command = new InitCommand($this->config);
-				$command_response = $command->run();
-				break;
-
-			default:
-				$command_response->addError('Command doesn\'t exist.');
-				break;
+		// Check if command exists
+		if (! array_key_exists($cliArgs[0], self::COMMANDS)) {
+			$command_response->addError('Command doesn\'t exist.');
+			return $this->handleResponse($command_response);
 		}
+
+		// Run command
+		$commandClassName = self::COMMANDS[$cliArgs[0]];
+		$command = new $commandClassName($this->config);
+		$command_response = $command->run();
+
 		return $this->handleResponse($command_response);
 	}
 
@@ -71,7 +78,7 @@ class App
 		$warnings = $response->getWarnings();
 		if ($warnings) {
 			foreach ($warnings as $warning) {
-				$outputUtil->printError($warning);
+				$outputUtil->printWarning($warning);
 			}
 			return self::EXIT_CODE_WARNING;
 		}
