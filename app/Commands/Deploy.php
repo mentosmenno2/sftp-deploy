@@ -18,7 +18,7 @@ class Deploy extends BaseCommand
 		$outputUtil = new OutputUtil();
 
 		$outputUtil->printLine('Creating deployment path.');
-		$deploymentPathCreated = $this->makeDeploymentPath();
+		$deploymentPathCreated = $this->createDeploymentPath();
 		if (! $deploymentPathCreated) {
 			$response->addError('Could not create deployment path.');
 			return $response;
@@ -40,7 +40,7 @@ class Deploy extends BaseCommand
 		return $success;
 	}
 
-	private function makeDeploymentPath(): bool
+	private function createDeploymentPath(): bool
 	{
 		$outputUtil = new OutputUtil();
 		$path = $this->getDeploymentPath();
