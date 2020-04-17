@@ -31,14 +31,13 @@ class Init
 
 	public function run(): CommandResponse
 	{
-		$config = new Config();
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
-		$json = json_encode($config->getDefaultConfig(), JSON_PRETTY_PRINT);
-		$fileName = $pathUtil->trailingSlashSystemPath($config->basePath) . Config::FILENAMME;
+		$json = json_encode($this->config->getDefaultConfig(), JSON_PRETTY_PRINT);
+		$fileName = $pathUtil->trailingSlashSystemPath($this->config->basePath) . Config::FILENAMME;
 
-		if ( ! file_exists($fileName) ) {
+		if (! file_exists($fileName)) {
 			$bytes = file_put_contents($fileName, $json);
 			if (! $bytes) {
 				$this->response->addError('Could not create configuration file');
