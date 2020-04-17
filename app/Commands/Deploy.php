@@ -17,8 +17,10 @@ class Deploy extends BaseCommand
 		$response = parent::run();
 		$outputUtil = new OutputUtil();
 
-		if (! $this->checkRequirements) {
-			$response->addError('Requirements for this command to run are not met.');
+		$outputUtil->printLine('Creating deployment path.');
+		$deploymentPathCreated = $this->makeDeploymentPath();
+		if (! $deploymentPathCreated) {
+			$response->addError('Could not create deployment path.');
 			return $response;
 		}
 
@@ -40,9 +42,19 @@ class Deploy extends BaseCommand
 
 	private function makeDeploymentPath(): bool
 	{
+		$outputUtil = new OutputUtil();
 		$path = $this->getDeploymentPath();
-		$success = mkdir($path, 0777, true);
-		return $success;
+		if (is_dir($path)) {
+			$outputUtil->printLine('Path exists.');
+			return true;
+		}
+
+		$created = mkdir($path, 0777, true);
+		if(!$created) {
+			$outputUtil->printLine('Could not create path.');
+			return false;
+		}
+		return true;
 	}
 
 	private function getDeploymentPath(): string

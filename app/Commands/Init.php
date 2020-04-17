@@ -15,6 +15,7 @@ class Init extends BaseCommand
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
+		$outputUtil->printLine('Creating configuration file.');
 		$generated = $this->config->generate();
 		if (! $generated) {
 			$response->addError('Could not create config file.');
