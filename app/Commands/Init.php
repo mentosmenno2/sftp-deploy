@@ -14,7 +14,7 @@ class Init
 	 *
 	 * @var Mentosmenno2\SFTPDeploy\Config
 	 */
-	protected $config;
+	private $config;
 
 
 	public function __construct(Config $config)

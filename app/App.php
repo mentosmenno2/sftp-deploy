@@ -23,14 +23,14 @@ class App
 	 *
 	 * @var string
 	 */
-	protected $basePath;
+	private $basePath;
 
 	/**
 	 * The configuration object.
 	 *
 	 * @var Mentosmenno2\SFTPDeploy\Config
 	 */
-	protected $config;
+	private $config;
 
 	public function __construct()
 	{
@@ -65,7 +65,7 @@ class App
 		return $this->handleResponse($command_response);
 	}
 
-	protected function handleResponse(CommandResponse $response): int
+	private function handleResponse(CommandResponse $response): int
 	{
 		$outputUtil = new OutputUtil();
 

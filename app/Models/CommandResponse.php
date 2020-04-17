@@ -4,8 +4,8 @@ namespace Mentosmenno2\SFTPDeploy\Models;
 
 class CommandResponse
 {
-	protected $errors = [];
-	protected $warnings = [];
+	private $errors = [];
+	private $warnings = [];
 
 	public function getErrors(): array
 	{

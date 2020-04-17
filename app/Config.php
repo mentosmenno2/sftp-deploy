@@ -4,12 +4,13 @@ namespace Mentosmenno2\SFTPDeploy;
 
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
+
 class Config
 {
 
 	public const FILENAMME = 'sftp-deploy.config.json';
 
-	protected $cliArgs = [];
+	private $cliArgs = [];
 	public $basePath;
 
 	public function __construct(array $cliArgs = [], $dieOnUnknownArg = true)
@@ -28,7 +29,7 @@ class Config
 		return $this->cliArgs;
 	}
 
-	public function getDefault(): array
+	private function getDefault(): array
 	{
 		return [
 			'directory_name' => 'deployments',
@@ -38,14 +39,26 @@ class Config
 		];
 	}
 
+	private function getFromFile(): array
+	{
+		$fileName = $this->getFileName();
+		$jsonString = file_get_contents($fileName);
+		if (! $jsonString) {
+			return array();
+		}
+		$jsonArray = json_decode($jsonString, true);
+		if (! is_array($jsonArray)) {
+			return array();
+		}
+		return $jsonArray;
+	}
+
 	public function generate(): bool
 	{
-		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
 		$json = json_encode($this->getDefault(), JSON_PRETTY_PRINT);
-		$fileName = $pathUtil->trailingSlashSystemPath($this->basePath) . Config::FILENAMME;
-
+		$fileName = $this->getFileName();
 		if (file_exists($fileName)) {
 			$outputUtil->printLine('Config file already exists.');
 			return false;
@@ -59,7 +72,16 @@ class Config
 		return true;
 	}
 
-	public function get() {
+	public function get(): array
+	{
 		$default = $this->getDefault();
+		$fromFile = $this->getFromFile();
+		return array_merge($default, $fromFile);
+	}
+
+	private function getFileName(): string {
+		$pathUtil = new PathUtil();
+		$fileName = $pathUtil->trailingSlashSystemPath($this->basePath) . Config::FILENAMME;
+		return $fileName;
 	}
 }
