@@ -4,19 +4,22 @@ namespace Mentosmenno2\SFTPDeploy\Utils;
 
 class Output
 {
-	public function printError(string $message): void {
+	public function printError(string $message): void
+	{
 		$this->printLine('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 		$this->printLine($message);
 		$this->printLine('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 	}
 
-	public function printWarning(string $message): void {
+	public function printWarning(string $message): void
+	{
 		$this->printLine('!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#');
 		$this->printLine($message);
 		$this->printLine('!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#!#');
 	}
 
-	public function printNotification(string $message): void {
+	public function printNotification(string $message): void
+	{
 		$this->printLine('##########################################');
 		$this->printLine($message);
 		$this->printLine('##########################################');
