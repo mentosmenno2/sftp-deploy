@@ -19,23 +19,11 @@ class App
 	];
 
 	/**
-	 * The base path of the project installation.
-	 *
-	 * @var string
-	 */
-	private $basePath;
-
-	/**
 	 * The configuration object.
 	 *
 	 * @var Mentosmenno2\SFTPDeploy\Config
 	 */
 	private $config;
-
-	public function __construct()
-	{
-		$this->basePath = getcwd();
-	}
 
 	public function run(): int
 	{
