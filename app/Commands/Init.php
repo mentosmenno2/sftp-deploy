@@ -16,21 +16,15 @@ class Init
 	 */
 	protected $config;
 
-	/**
-	 * The command response object.
-	 *
-	 * @var Mentosmenno2\SFTPDeploy\Models\CommandResponse
-	 */
-	protected $response;
 
 	public function __construct(Config $config)
 	{
 		$this->config = $config;
-		$this->response = new CommandResponse();
 	}
 
 	public function run(): CommandResponse
 	{
+		$response = new CommandResponse();
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
@@ -40,16 +34,16 @@ class Init
 		if (! file_exists($fileName)) {
 			$bytes = file_put_contents($fileName, $json);
 			if (! $bytes) {
-				$this->response->addError('Could not create configuration file');
-				return $this->response;
+				$response->addError('Could not create configuration file');
+				return $response;
 			}
 		} else {
-			$this->response->addWarning('Did not create config file, file already exists.');
-			return $this->response;
+			$response->addWarning('Did not create config file, file already exists.');
+			return $response;
 		}
 
 		$outputUtil->printNotification('Configuration file created');
 
-		return $this->response;
+		return $response;
 	}
 }
