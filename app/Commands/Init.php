@@ -28,22 +28,13 @@ class Init
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
-		$json = json_encode($this->config->getDefaultConfig(), JSON_PRETTY_PRINT);
-		$fileName = $pathUtil->trailingSlashSystemPath($this->config->basePath) . Config::FILENAMME;
-
-		if (! file_exists($fileName)) {
-			$bytes = file_put_contents($fileName, $json);
-			if (! $bytes) {
-				$response->addError('Could not create configuration file');
-				return $response;
-			}
-		} else {
-			$response->addWarning('Did not create config file, file already exists.');
+		$generated = $this->config->generate();
+		if (! $generated) {
+			$response->addError('Could not create config file.');
 			return $response;
 		}
 
-		$outputUtil->printNotification('Configuration file created');
-
+		$outputUtil->printNotification('Config file created.');
 		return $response;
 	}
 }
