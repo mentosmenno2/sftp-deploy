@@ -33,8 +33,8 @@ class Config
 	private function getDefault(): array
 	{
 		return [
-			'deployments_directory' => 'deployments',
-			'use_deployment_subdirectory' => true,
+			'builds_directory' => 'deployments',
+			'use_build_subdirectory' => true,
 			'run_before' => [],
 			'repo_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
 			'repo_clone_directory' => '.',

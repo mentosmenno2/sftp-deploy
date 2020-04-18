@@ -4,6 +4,7 @@ namespace Mentosmenno2\SFTPDeploy;
 
 use Mentosmenno2\SFTPDeploy\Commands\Init as InitCommand;
 use Mentosmenno2\SFTPDeploy\Commands\Build as BuildCommand;
+use Mentosmenno2\SFTPDeploy\Commands\Deploy as DeployCommand;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 
@@ -16,6 +17,7 @@ class App
 	private const COMMANDS = [
 		'init' => InitCommand::class,
 		'build' => BuildCommand::class,
+		'deploy' => DeployCommand::class,
 	];
 
 	/**

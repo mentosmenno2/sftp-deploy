@@ -10,28 +10,31 @@ use Mentosmenno2\SFTPDeploy\Utils\Shell as ShellUtil;
 
 class Build extends BaseCommand
 {
-	private $deploymentPath;
+	private $buildPath;
 
 	public function run(): CommandResponse
 	{
-		$response = parent::run();
 		$outputUtil = new OutputUtil();
+		$response = parent::run();
+		if ($response->hasErrors()) {
+			return $response;
+		}
 
-		$outputUtil->printLine('Creating deployment path.');
-		$deploymentPathCreated = $this->createDeploymentPath();
-		if (! $deploymentPathCreated) {
-			$response->addError('Could not create deployment path.');
+		$outputUtil->printLine('Creating build path.');
+		$buildPathCreated = $this->createBuildPath();
+		if (! $buildPathCreated) {
+			$response->addError('Could not create build path.');
 			return $response;
 		}
 
 		$outputUtil->printLine('Building project.');
-		$deploymentPathCreated = $this->buildProject();
-		if (! $deploymentPathCreated) {
+		$buildCreated = $this->buildProject();
+		if (! $buildCreated) {
 			$response->addError('Building project failed.');
 			return $response;
 		}
 
-		$outputUtil->printNotification('Project successfully deployed to the SFTP server.');
+		$outputUtil->printNotification('Project built successfully.');
 		return $response;
 	}
 
@@ -47,12 +50,12 @@ class Build extends BaseCommand
 		return $success;
 	}
 
-	private function createDeploymentPath(): bool
+	private function createBuildPath(): bool
 	{
 		$outputUtil = new OutputUtil();
 		$pathUtil = new PathUtil();
 
-		$path = $pathUtil->trailingSlashSystemPath($this->getDeploymentPath());
+		$path = $pathUtil->trailingSlashSystemPath($this->getBuildPath());
 		if (is_dir($path)) {
 			$outputUtil->printLine('Path exists.');
 			return true;
@@ -91,13 +94,14 @@ class Build extends BaseCommand
 		return true;
 	}
 
-	private function cloneRepository(): bool {
+	private function cloneRepository(): bool
+	{
 		$shellUtil = new ShellUtil();
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
 		$repoUrl = $this->config->getItem('repo_url');
-		$repoDirectory = $pathUtil->trailingSlashSystemPath($this->getDeploymentPath());
+		$repoDirectory = $pathUtil->trailingSlashSystemPath($this->getBuildPath());
 		$repoDirectory .= $pathUtil->trailingSlashSystemPath($this->config->getItem('repo_clone_directory'));
 		$repoCheckout = $this->config->getItem('repo_checkout');
 
@@ -140,7 +144,7 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlashSystemPath($this->getDeploymentPath()),
+			'cd ' . $pathUtil->trailingSlashSystemPath($this->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
 
@@ -164,7 +168,7 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlashSystemPath($this->getDeploymentPath()),
+			'cd ' . $pathUtil->trailingSlashSystemPath($this->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
 
@@ -176,21 +180,21 @@ class Build extends BaseCommand
 		return true;
 	}
 
-	private function getDeploymentPath(): string
+	private function getBuildPath(): string
 	{
-		if (! $this->deploymentPath) {
+		if (! $this->buildPath) {
 			$pathUtil = new PathUtil();
-			$deploymentPath = $pathUtil->trailingSlashSystemPath($this->config->getBasePath());
-			$deploymentPath .= $pathUtil->trailingSlashSystemPath($this->config->getItem('deployments_directory'));
+			$buildPath = $pathUtil->trailingSlashSystemPath($this->config->getBasePath());
+			$buildPath .= $pathUtil->trailingSlashSystemPath($this->config->getItem('builds_directory'));
 
-			if ($this->config->getItem('use_deployment_subdirectory')) {
+			if ($this->config->getItem('use_build_subdirectory')) {
 				$subDirName = ( new DateTime() )->format('YmdHis');
-				$deploymentPath .= $pathUtil->trailingSlashSystemPath($subDirName);
+				$buildPath .= $pathUtil->trailingSlashSystemPath($subDirName);
 			}
-			$this->deploymentPath = $deploymentPath;
+			$this->buildPath = $buildPath;
 		}
 
 
-		return $this->deploymentPath;
+		return $this->buildPath;
 	}
 }
