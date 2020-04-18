@@ -14,12 +14,14 @@ class Build extends BaseCommand
 
 	public function run(): CommandResponse
 	{
+		// Run parent
 		$outputUtil = new OutputUtil();
 		$response = parent::run();
 		if ($response->hasErrors()) {
 			return $response;
 		}
 
+		// Create build path
 		$outputUtil->printLine('Creating build path.');
 		$buildPathCreated = $this->createBuildPath();
 		if (! $buildPathCreated) {
@@ -27,6 +29,7 @@ class Build extends BaseCommand
 			return $response;
 		}
 
+		// Build project
 		$outputUtil->printLine('Building project.');
 		$buildCreated = $this->buildProject();
 		if (! $buildCreated) {

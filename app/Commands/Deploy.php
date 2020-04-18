@@ -7,12 +7,18 @@ use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 
 class Deploy extends BaseCommand
 {
-	private $deploymentPath;
-
 	public function run(): CommandResponse
 	{
+		// Run parent
 		$outputUtil = new OutputUtil();
 		$response = parent::run();
+		if ($response->hasErrors()) {
+			return $response;
+		}
+
+		// Run build
+		$buildCommand = new Build($this->config);
+		$response = $buildCommand->run();
 		if ($response->hasErrors()) {
 			return $response;
 		}
