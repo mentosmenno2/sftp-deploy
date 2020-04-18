@@ -3,13 +3,12 @@
 namespace Mentosmenno2\SFTPDeploy\Commands;
 
 use DateTime;
-use Mentosmenno2\SFTPDeploy\Config;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Shell as ShellUtil;
 
-class Deploy extends BaseCommand
+class Build extends BaseCommand
 {
 	private $deploymentPath;
 
@@ -97,9 +96,10 @@ class Deploy extends BaseCommand
 		$pathUtil = new PathUtil();
 		$outputUtil = new OutputUtil();
 
-		$repoUrl = $this->config->getItem('repo_clone_url');
+		$repoUrl = $this->config->getItem('repo_url');
 		$repoDirectory = $pathUtil->trailingSlashSystemPath($this->getDeploymentPath());
 		$repoDirectory .= $pathUtil->trailingSlashSystemPath($this->config->getItem('repo_clone_directory'));
+		$repoCheckout = $this->config->getItem('repo_checkout');
 
 		// Create repo directory
 		if (! is_dir($repoDirectory)) {
@@ -115,7 +115,7 @@ class Deploy extends BaseCommand
 			'cd ' . $pathUtil->trailingSlashSystemPath($repoDirectory),
 			'dir',
 			'git clone ' . $repoUrl . ' .',
-			'git checkout master',
+			'git checkout ' . $repoCheckout,
 		];
 		$output = $shellUtil->runCommands($commands);
 

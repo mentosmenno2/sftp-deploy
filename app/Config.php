@@ -18,7 +18,7 @@ class Config
 	{
 		if (empty($cliArgs)) {
 			$cliArgs = $_SERVER['argv'];
-			array_shift($cliArgs);
+			array_shift($cliArgs); // Remove filename from cliargs
 		}
 		$this->cliArgs = $cliArgs;
 
@@ -36,8 +36,9 @@ class Config
 			'deployments_directory' => 'deployments',
 			'use_deployment_subdirectory' => true,
 			'run_before' => [],
-			'repo_clone_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
+			'repo_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
 			'repo_clone_directory' => '.',
+			'repo_checkout' => 'master',
 			'run_after' => [
 				'composer install --no-dev',
 				'composer dump-autoload -o',
