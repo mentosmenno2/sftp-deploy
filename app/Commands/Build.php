@@ -55,7 +55,7 @@ class Build extends BaseCommand
 		$outputUtil = new OutputUtil();
 		$pathUtil = new PathUtil();
 
-		$path = $pathUtil->trailingSlashSystemPath($this->getBuildPath());
+		$path = $pathUtil->trailingSlash($this->getBuildPath());
 		if (is_dir($path)) {
 			$outputUtil->printLine('Path exists.');
 			return true;
@@ -101,8 +101,8 @@ class Build extends BaseCommand
 		$outputUtil = new OutputUtil();
 
 		$repoUrl = $this->config->getItem('repo_url');
-		$repoDirectory = $pathUtil->trailingSlashSystemPath($this->getBuildPath());
-		$repoDirectory .= $pathUtil->trailingSlashSystemPath($this->config->getItem('repo_clone_directory'));
+		$repoDirectory = $pathUtil->trailingSlash($this->getBuildPath());
+		$repoDirectory .= $pathUtil->trailingSlash($this->config->getItem('repo_clone_directory'));
 		$repoCheckout = $this->config->getItem('repo_checkout');
 
 		// Create repo directory
@@ -116,7 +116,7 @@ class Build extends BaseCommand
 
 		// Clone repo
 		$commands = [
-			'cd ' . $pathUtil->trailingSlashSystemPath($repoDirectory),
+			'cd ' . $pathUtil->trailingSlash($repoDirectory),
 			'dir',
 			'git clone ' . $repoUrl . ' .',
 			'git checkout ' . $repoCheckout,
@@ -144,7 +144,7 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlashSystemPath($this->getBuildPath()),
+			'cd ' . $pathUtil->trailingSlash($this->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
 
@@ -168,7 +168,7 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlashSystemPath($this->getBuildPath()),
+			'cd ' . $pathUtil->trailingSlash($this->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
 
@@ -184,12 +184,12 @@ class Build extends BaseCommand
 	{
 		if (! $this->buildPath) {
 			$pathUtil = new PathUtil();
-			$buildPath = $pathUtil->trailingSlashSystemPath($this->config->getBasePath());
-			$buildPath .= $pathUtil->trailingSlashSystemPath($this->config->getItem('builds_directory'));
+			$buildPath = $pathUtil->trailingSlash($this->config->getBasePath());
+			$buildPath .= $pathUtil->trailingSlash($this->config->getItem('builds_directory'));
 
 			if ($this->config->getItem('use_build_subdirectory')) {
 				$subDirName = ( new DateTime() )->format('YmdHis');
-				$buildPath .= $pathUtil->trailingSlashSystemPath($subDirName);
+				$buildPath .= $pathUtil->trailingSlash($subDirName);
 			}
 			$this->buildPath = $buildPath;
 		}

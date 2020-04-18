@@ -110,7 +110,7 @@ class Config
 	private function getFileName(): string
 	{
 		$pathUtil = new PathUtil();
-		$fileName = $pathUtil->trailingSlashSystemPath($this->getBasePath()) . Config::FILENAMME;
+		$fileName = $pathUtil->trailingSlash($this->getBasePath()) . Config::FILENAMME;
 		return $fileName;
 	}
 

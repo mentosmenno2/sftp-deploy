@@ -4,25 +4,14 @@ namespace Mentosmenno2\SFTPDeploy\Utils;
 
 class Path
 {
-	public function trailingSlashUrl(string $string): string
+	public function trailingSlash(string $path): string
 	{
-		$string = $this->unTrailingSlashUrl($string);
-		return $string . '/';
+		$path = $this->unTrailingSlash($path);
+		return $path . DIRECTORY_SEPARATOR;
 	}
 
-	public function trailingSlashSystemPath(string $string): string
+	public function unTrailingSlash(string $path): string
 	{
-		$string = $this->unTrailingSlashSystemPath($string);
-		return $string . DIRECTORY_SEPARATOR;
-	}
-
-	public function unTrailingSlashUrl(string $string): string
-	{
-		return rtrim($string, '/');
-	}
-
-	public function unTrailingSlashSystemPath(string $string): string
-	{
-		return rtrim($string, DIRECTORY_SEPARATOR);
+		return rtrim($path, DIRECTORY_SEPARATOR);
 	}
 }
