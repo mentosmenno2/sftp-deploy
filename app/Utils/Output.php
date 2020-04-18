@@ -27,6 +27,11 @@ class Output
 
 	public function printLine(string $message): void
 	{
-		echo $message . PHP_EOL;
+		$this->print($message . PHP_EOL);
+	}
+
+	public function print(string $message): void
+	{
+		echo $message;
 	}
 }

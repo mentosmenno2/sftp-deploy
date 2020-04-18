@@ -37,7 +37,13 @@ class Config
 			'use_deployment_subdirectory' => true,
 			'run_before' => [],
 			'repo_clone_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
-			'run_after' => [],
+			'repo_clone_directory' => '.',
+			'run_after' => [
+				'composer install --no-dev',
+				'composer dump-autoload -o',
+				'npm ci',
+				'npm npm run build',
+			],
 		];
 	}
 

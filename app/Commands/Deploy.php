@@ -7,6 +7,7 @@ use Mentosmenno2\SFTPDeploy\Config;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
+use Mentosmenno2\SFTPDeploy\Utils\Shell as ShellUtil;
 
 class Deploy extends BaseCommand
 {
@@ -21,6 +22,13 @@ class Deploy extends BaseCommand
 		$deploymentPathCreated = $this->createDeploymentPath();
 		if (! $deploymentPathCreated) {
 			$response->addError('Could not create deployment path.');
+			return $response;
+		}
+
+		$outputUtil->printLine('Building project.');
+		$deploymentPathCreated = $this->buildProject();
+		if (! $deploymentPathCreated) {
+			$response->addError('Building project failed.');
 			return $response;
 		}
 
@@ -43,17 +51,128 @@ class Deploy extends BaseCommand
 	private function createDeploymentPath(): bool
 	{
 		$outputUtil = new OutputUtil();
-		$path = $this->getDeploymentPath();
+		$pathUtil = new PathUtil();
+
+		$path = $pathUtil->trailingSlashSystemPath($this->getDeploymentPath());
 		if (is_dir($path)) {
 			$outputUtil->printLine('Path exists.');
 			return true;
 		}
 
 		$created = mkdir($path, 0777, true);
-		if(!$created) {
+		if (!$created) {
 			$outputUtil->printLine('Could not create path.');
 			return false;
 		}
+		return true;
+	}
+
+	private function buildProject(): bool
+	{
+		$outputUtil = new OutputUtil();
+
+		$outputUtil->printLine('Running before commands.');
+		$before = $this->runBeforeCommands();
+		if (!$before) {
+			return false;
+		}
+
+		$outputUtil->printLine('Cloning repository.');
+		$clone = $this->cloneRepository();
+		if (!$clone) {
+			return false;
+		}
+
+		$outputUtil->printLine('Running after commands.');
+		$after = $this->runAfterCommands();
+		if (!$after) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function cloneRepository(): bool {
+		$shellUtil = new ShellUtil();
+		$pathUtil = new PathUtil();
+		$outputUtil = new OutputUtil();
+
+		$repoUrl = $this->config->getItem('repo_clone_url');
+		$repoDirectory = $pathUtil->trailingSlashSystemPath($this->getDeploymentPath());
+		$repoDirectory .= $pathUtil->trailingSlashSystemPath($this->config->getItem('repo_clone_directory'));
+
+		// Create repo directory
+		if (! is_dir($repoDirectory)) {
+			$created = mkdir($repoDirectory, 0777, true);
+			if (!$created) {
+				$outputUtil->printLine('Could not create path.');
+				return false;
+			}
+		}
+
+		// Clone repo
+		$commands = [
+			'cd ' . $pathUtil->trailingSlashSystemPath($repoDirectory),
+			'dir',
+			'git clone ' . $repoUrl . ' .',
+			'git checkout master',
+		];
+		$output = $shellUtil->runCommands($commands);
+
+		// Handle output
+		if (null === $output) {
+			$outputUtil->printLine('Could not clone repository.');
+			return false;
+		}
+		$outputUtil->printLine($output);
+		return true;
+	}
+
+	private function runBeforeCommands(): bool
+	{
+		$shellUtil = new ShellUtil();
+		$pathUtil = new PathUtil();
+		$outputUtil = new OutputUtil();
+
+		$config_commands = $this->config->getItem('run_before');
+		if (!$config_commands) {
+			return true;
+		}
+
+		$commands = [
+			'cd ' . $pathUtil->trailingSlashSystemPath($this->getDeploymentPath()),
+		];
+		$commands = array_merge($commands, $config_commands);
+
+		$output = $shellUtil->runCommands($commands);
+		if (null === $output) {
+			return false;
+		}
+		$outputUtil->printLine($output);
+		return true;
+	}
+
+	private function runAfterCommands(): bool
+	{
+		$shellUtil = new ShellUtil();
+		$pathUtil = new PathUtil();
+		$outputUtil = new OutputUtil();
+
+		$config_commands = $this->config->getItem('run_after');
+		if (!$config_commands) {
+			return true;
+		}
+
+		$commands = [
+			'cd ' . $pathUtil->trailingSlashSystemPath($this->getDeploymentPath()),
+		];
+		$commands = array_merge($commands, $config_commands);
+
+		$output = $shellUtil->runCommands($commands);
+		if (null === $output) {
+			return false;
+		}
+		$outputUtil->printLine($output);
 		return true;
 	}
 
