@@ -2,6 +2,8 @@
 
 namespace Mentosmenno2\SFTPDeploy\Utils;
 
+use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
+
 class Path
 {
 	public function realPath(string $path): string
@@ -103,29 +105,62 @@ class Path
 		return $result;
 	}
 
-	public function delete(string $path)
+	public function delete(string $path): bool
 	{
+		$outputUtil = new OutputUtil();
 		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
-		rmdir($path);
+
+		$success = rmdir($path);
+
+		if (! $success) {
+			$outputUtil->printLine('Could not delete directory: ' . $path);
+			return false;
+		}
+		return true;
 	}
 
-	public function deleteContents(string $path)
+	public function deleteContents(string $path): bool
 	{
+		$outputUtil = new OutputUtil();
 		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
 		$files = array_diff(scandir($path), array('.','..'));
+		$success = true;
+
 		foreach ($files as $file) {
 			$filePath = $path . DIRECTORY_SEPARATOR . $file;
-			(is_dir($filePath)) ? $this->deleteWithContents($filePath) : unlink($filePath);
+			if (is_dir($filePath)) {
+				$deleteWithContentsSuccess = $this->deleteWithContents($filePath);
+				if (!$deleteWithContentsSuccess) {
+					$success = false;
+				}
+			} else {
+				$chmodSuccess = chmod($filePath, 0644);
+				$unlinkSuccess = unlink($filePath);
+				if (! $chmodSuccess || !$unlinkSuccess) {
+					$success = false;
+					$outputUtil->printLine('Could not delete file: ' . $path);
+				}
+			}
 		}
+
+		return $success;
 	}
 
-	public function deleteWithContents(string $path)
+	public function deleteWithContents(string $path): bool
 	{
+		$outputUtil = new OutputUtil();
 		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
-		$this->deleteContents($path);
-		$this->delete($path);
+
+		$contentsSuccess = $this->deleteContents($path);
+		$directorySuccess = $this->delete($path);
+
+		if (! $contentsSuccess || !$directorySuccess) {
+			$outputUtil->printLine('Could not delete direcory with contents: ' . $path);
+			return false;
+		}
+		return true;
 	}
 }

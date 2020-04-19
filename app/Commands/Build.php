@@ -58,14 +58,22 @@ class Build extends BaseCommand
 		$pathUtil = new PathUtil();
 
 		$path = $pathUtil->trailingSlash($this->config->getBuildPath());
+
+		// If already exists, cleanup
 		if (is_dir($path)) {
-			$outputUtil->printLine('Path exists.');
+			$outputUtil->printLine('Build path exists. Cleaning up.');
+			$deleted = $pathUtil->deleteContents($path);
+			if (! $deleted) {
+				$outputUtil->printLine('Could not clean up build path.');
+				return false;
+			}
 			return true;
 		}
 
+		// Does not exist, create
 		$created = mkdir($path, 0777, true);
 		if (!$created) {
-			$outputUtil->printLine('Could not create path.');
+			$outputUtil->printLine('Could not create build path.');
 			return false;
 		}
 		return true;
