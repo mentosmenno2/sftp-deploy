@@ -24,7 +24,7 @@ Add the commands to the Composer scripts by adding this in the `composer.json` f
 
 ## Configuration
 
-Use the [init](###Init) command to generate a configuration file.
+Use the `init` command to generate a configuration file. See the Commands section below.
 
 Open the generated `sftp-deploy.config.json` file, and edit the properties following the specification below.
 
