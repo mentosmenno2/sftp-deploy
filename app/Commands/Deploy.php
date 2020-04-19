@@ -47,6 +47,8 @@ class Deploy extends BaseCommand
 
 		$pathContents = $pathUtil->getContents($deployPath);
 
+		
+
 		return true;
 	}
 

@@ -28,10 +28,10 @@ class Shell
 		if (! $proc) {
 			return self::EXIT_CODE_ERROR;
 		}
-		while(($line = fgets($pipes[1])) !== false) {
+		while (($line = fgets($pipes[1])) !== false) {
 			$outputUtil->printLine($line);
 		}
-		while(($line = fgets($pipes[2])) !== false) {
+		while (($line = fgets($pipes[2])) !== false) {
 			$outputUtil->printLine($line);
 		}
 		fclose($pipes[0]);
