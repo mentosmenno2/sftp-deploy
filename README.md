@@ -24,13 +24,13 @@ Add the commands to the Composer scripts by adding this in the `composer.json` f
 
 ## Configuration
 
-Generate a configuration file.
+Use the [init](###Init) command to generate a configuration file.
 
-```sh
-composer run sftp-deploy init
-```
+Open the generated `sftp-deploy.config.json` file, and edit the properties following the specification below.
 
-Open the generated `` file, and edit the properties following the specification below.
+### Configuration file properties
+
+- TODO: Properties
 
 ## Commands
 
@@ -42,7 +42,7 @@ composer run sftp-deploy COMMAND_NAME
 
 ### Init
 
-Generate a configuration file.
+Generate a configuration file. This file will be called `sftp-deploy.config.json`.
 
 ```sh
 composer run sftp-deploy init
