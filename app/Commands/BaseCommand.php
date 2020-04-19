@@ -2,7 +2,6 @@
 
 namespace Mentosmenno2\SFTPDeploy\Commands;
 
-use DateTime;
 use Mentosmenno2\SFTPDeploy\Config;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 

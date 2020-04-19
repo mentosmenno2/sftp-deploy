@@ -120,7 +120,6 @@ class Build extends BaseCommand
 		// Clone repo
 		$commands = [
 			'cd ' . $pathUtil->trailingSlash($repoDirectory),
-			'dir',
 			'git clone ' . $repoUrl . ' .',
 			'git checkout ' . $repoCheckout,
 		];
