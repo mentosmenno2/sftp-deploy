@@ -23,7 +23,10 @@
             "Mentosmenno2\\SFTPDeploy\\": "app/"
         }
     },
-    "require": {},
+    "require": {
+        "league/flysystem": "^1.0",
+        "league/flysystem-sftp": "^1.0"
+    },
     "require-dev": {
         "mentosmenno2/coding-standards": "^1.0"
     },

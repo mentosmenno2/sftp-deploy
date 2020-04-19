@@ -2,7 +2,6 @@
 
 namespace Mentosmenno2\SFTPDeploy\Commands;
 
-use DateTime;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
@@ -58,7 +57,7 @@ class Build extends BaseCommand
 		$outputUtil = new OutputUtil();
 		$pathUtil = new PathUtil();
 
-		$path = $pathUtil->trailingSlash($this->getBuildPath());
+		$path = $pathUtil->trailingSlash($this->config->getBuildPath());
 		if (is_dir($path)) {
 			$outputUtil->printLine('Path exists.');
 			return true;
@@ -104,7 +103,7 @@ class Build extends BaseCommand
 		$outputUtil = new OutputUtil();
 
 		$repoUrl = $this->config->getItem('repo_url');
-		$repoDirectory = $pathUtil->trailingSlash($this->getBuildPath());
+		$repoDirectory = $pathUtil->trailingSlash($this->config->getBuildPath());
 		$repoDirectory .= $pathUtil->trailingSlash($this->config->getItem('repo_clone_directory'));
 		$repoCheckout = $this->config->getItem('repo_checkout');
 
@@ -123,14 +122,13 @@ class Build extends BaseCommand
 			'git clone ' . $repoUrl . ' .',
 			'git checkout ' . $repoCheckout,
 		];
-		$output = $shellUtil->runCommands($commands);
+		$responseCode = $shellUtil->runCommands($commands);
 
 		// Handle output
-		if (null === $output) {
+		if (0 < $responseCode) {
 			$outputUtil->printLine('Could not clone repository.');
 			return false;
 		}
-		$outputUtil->printLine($output);
 		return true;
 	}
 
@@ -146,15 +144,16 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlash($this->getBuildPath()),
+			'cd ' . $pathUtil->trailingSlash($this->config->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
+		$responseCode = $shellUtil->runCommands($commands);
 
-		$output = $shellUtil->runCommands($commands);
-		if (null === $output) {
+		// Handle output
+		if (0 < $responseCode) {
+			$outputUtil->printLine('Could not clone repository.');
 			return false;
 		}
-		$outputUtil->printLine($output);
 		return true;
 	}
 
@@ -170,33 +169,16 @@ class Build extends BaseCommand
 		}
 
 		$commands = [
-			'cd ' . $pathUtil->trailingSlash($this->getBuildPath()),
+			'cd ' . $pathUtil->trailingSlash($this->config->getBuildPath()),
 		];
 		$commands = array_merge($commands, $config_commands);
+		$responseCode = $shellUtil->runCommands($commands);
 
-		$output = $shellUtil->runCommands($commands);
-		if (null === $output) {
+		// Handle output
+		if (0 < $responseCode) {
+			$outputUtil->printLine('Could not clone repository.');
 			return false;
 		}
-		$outputUtil->printLine($output);
 		return true;
-	}
-
-	private function getBuildPath(): string
-	{
-		if (! $this->buildPath) {
-			$pathUtil = new PathUtil();
-			$buildPath = $pathUtil->trailingSlash($this->config->getBasePath());
-			$buildPath .= $pathUtil->trailingSlash($this->config->getItem('builds_directory'));
-
-			if ($this->config->getItem('use_build_subdirectory')) {
-				$subDirName = ( new DateTime() )->format('YmdHis');
-				$buildPath .= $pathUtil->trailingSlash($subDirName);
-			}
-			$this->buildPath = $buildPath;
-		}
-
-
-		return $this->buildPath;
 	}
 }

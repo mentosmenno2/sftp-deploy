@@ -7,13 +7,10 @@ use Mentosmenno2\SFTPDeploy\Commands\Build as BuildCommand;
 use Mentosmenno2\SFTPDeploy\Commands\Deploy as DeployCommand;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
+use Mentosmenno2\SFTPDeploy\Utils\Shell as ShellUtil;
 
 class App
 {
-	public const EXIT_CODE_SUCCESS = 0;
-	public const EXIT_CODE_WARNING = 1;
-	public const EXIT_CODE_ERROR = 2;
-
 	private const COMMANDS = [
 		'init' => InitCommand::class,
 		'build' => BuildCommand::class,
@@ -64,7 +61,7 @@ class App
 			foreach ($errors as $error) {
 				$outputUtil->printError($error);
 			}
-			return self::EXIT_CODE_ERROR;
+			return ShellUtil::EXIT_CODE_ERROR;
 		}
 
 		$warnings = $response->getWarnings();
@@ -72,9 +69,9 @@ class App
 			foreach ($warnings as $warning) {
 				$outputUtil->printWarning($warning);
 			}
-			return self::EXIT_CODE_WARNING;
+			return ShellUtil::EXIT_CODE_WARNING;
 		}
 
-		return self::EXIT_CODE_SUCCESS;
+		return ShellUtil::EXIT_CODE_SUCCESS;
 	}
 }

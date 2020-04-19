@@ -4,6 +4,7 @@ namespace Mentosmenno2\SFTPDeploy;
 
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Path as PathUtil;
+use DateTime;
 
 class Config
 {
@@ -12,6 +13,8 @@ class Config
 
 	private $cliArgs = [];
 	private $basePath;
+	private $buildPath;
+	private $deployPath;
 	private $data;
 
 	public function __construct(array $cliArgs = [], $dieOnUnknownArg = true)
@@ -45,6 +48,19 @@ class Config
 				'npm ci',
 				'npm npm run build',
 			],
+			'deploy_directory' => '.',
+			'sftp_adapter' => 'sftp',
+			'sftp_host' => 'example.com',
+			'sftp_port' => 22,
+			'sftp_username' => 'username',
+			'sftp_password' => 'password',
+			'sftp_root' => '/path/to/root',
+			'sftp_passive' => true,
+			'sftp_ssl' => true,
+			'sftp_ignore_passive_address' => false,
+			'sftp_private_key_file' => null,
+			'sftp_private_key_password' => null,
+			'sftp_directory_permission' => 0755,
 		];
 	}
 
@@ -117,5 +133,39 @@ class Config
 	public function getBasePath(): string
 	{
 		return $this->basePath;
+	}
+
+	public function getBuildPath(): string
+	{
+		if (! $this->buildPath) {
+			$pathUtil = new PathUtil();
+			$buildPath = '';
+			if (! $pathUtil->isRootPath($this->getItem('builds_directory'))) {
+				$buildPath .= $pathUtil->trailingSlash($this->getBasePath());
+			}
+			$buildPath .= $pathUtil->trailingSlash($this->getItem('builds_directory'));
+
+			if ($this->getItem('use_build_subdirectory')) {
+				$subDirName = ( new DateTime() )->format('YmdHis');
+				$buildPath .= $pathUtil->trailingSlash($subDirName);
+			}
+			$this->buildPath = $buildPath;
+		}
+		return $this->buildPath;
+	}
+
+	public function getDeployPath()
+	{
+		if (! $this->deployPath) {
+			$pathUtil = new PathUtil();
+			$deployPath = '';
+			if (! $pathUtil->isRootPath($this->getItem('deploy_directory'))) {
+				$deployPath .= $pathUtil->trailingSlash($this->getBuildPath());
+			}
+			$deployPath .= $pathUtil->trailingSlash($this->getItem('deploy_directory'));
+			$this->deployPath = $deployPath;
+		}
+		return $this->deployPath;
+		$this->config->getItem('deploy_directory');
 	}
 }
