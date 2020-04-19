@@ -46,7 +46,7 @@ class Config
 				'composer install --no-dev',
 				'composer dump-autoload -o',
 				'npm ci',
-				'npm npm run build',
+				'npm run build',
 			],
 			'deploy_directory' => '.',
 			'sftp_adapter' => 'sftp',

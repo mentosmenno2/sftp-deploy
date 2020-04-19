@@ -4,6 +4,15 @@ namespace Mentosmenno2\SFTPDeploy\Utils;
 
 class Path
 {
+	public function realPath(string $path): string
+	{
+		$realpath = realpath($path);
+		if (false === $realpath) {
+			return $path;
+		}
+		return $realpath;
+	}
+
 	public function trailingSlash(string $path): string
 	{
 		$path = $this->unTrailingSlash($path);
@@ -23,9 +32,36 @@ class Path
 		return true;
 	}
 
+	public function toWindowsPath(string $path)
+	{
+		$path = str_replace('/', '\\', $path);
+		return $path;
+	}
+
+	public function toLinuxPath(string $path)
+	{
+		$path = str_replace('\\', '/', $path);
+		return $path;
+	}
+
+	public function getRelative(string $path, string $rootPath): string
+	{
+		$path = $this->realPath($path);
+		$rootPath = $this->realPath($rootPath);
+		$rootPath = $this->trailingSlash($rootPath);
+
+		$relative = '';
+		if (substr($path, 0, strlen($rootPath)) == $rootPath) {
+			$relative = substr($path, strlen($rootPath));
+		}
+
+		return $relative;
+	}
+
 	public function getContents($path): array
 	{
 		$result = array();
+		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
 
 		$recursive = $this->getContentsRecursive($path);
@@ -36,7 +72,7 @@ class Path
 				$result = array_merge($result, $this->getContents($path . $subdirPath));
 			} else {
 				// File
-				$result[] = $path . $contents;
+				$result[] = $this->realPath($path . $contents);
 			}
 		}
 
@@ -46,6 +82,7 @@ class Path
 	public function getContentsRecursive($path): array
 	{
 		$result = array();
+		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
 
 		$cdir = scandir($path);
@@ -68,11 +105,15 @@ class Path
 
 	public function delete(string $path)
 	{
+		$path = $this->realPath($path);
+		$path = $this->trailingSlash($path);
 		rmdir($path);
 	}
 
 	public function deleteContents(string $path)
 	{
+		$path = $this->realPath($path);
+		$path = $this->trailingSlash($path);
 		$files = array_diff(scandir($path), array('.','..'));
 		foreach ($files as $file) {
 			$filePath = $path . DIRECTORY_SEPARATOR . $file;
@@ -82,6 +123,8 @@ class Path
 
 	public function deleteWithContents(string $path)
 	{
+		$path = $this->realPath($path);
+		$path = $this->trailingSlash($path);
 		$this->deleteContents($path);
 		$this->delete($path);
 	}

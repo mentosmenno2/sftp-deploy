@@ -2,6 +2,7 @@
 
 namespace Mentosmenno2\SFTPDeploy\Commands;
 
+use Exception;
 use League\Flysystem\Filesystem;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
@@ -42,12 +43,44 @@ class Deploy extends BaseCommand
 
 	private function deployProject(): bool
 	{
+		$outputUtil = new OutputUtil();
 		$pathUtil = new PathUtil();
+		$sftp = $this->getSftpFileSystem();
+		if (! $sftp) {
+			$outputUtil->printLine('No (s)ftp file system.');
+			return false;
+		}
+
 		$deployPath = $this->config->getDeployPath();
+		$deployPath = $pathUtil->realPath($deployPath);
+		$deployPath = $pathUtil->trailingSlash($deployPath);
+		$deployPathContents = $pathUtil->getContents($deployPath);
 
-		$pathContents = $pathUtil->getContents($deployPath);
+		// Extract files
+		$filesToUpload = array_filter($deployPathContents, function ($dirOrFilePath) {
+			return is_file($dirOrFilePath);
+		});
 
-		
+		$outputUtil->printLine('Start uploading files to (s)ftp.');
+		foreach ($filesToUpload as $index => $filePath) {
+			$filePath = $pathUtil->realPath($filePath);
+			$relative = $pathUtil->getRelative($filePath, $deployPath);
+			$sftpPath = $pathUtil->toLinuxPath($relative);
+
+			$outputUtil->printLine('[' . ($index + 1) . ' / ' . count($deployPathContents) . '] ' . $relative);
+
+			$resource = fopen($filePath, 'r');
+			$response = false;
+			try {
+				$response = $sftp->putStream($sftpPath, $resource);
+			} catch (Exception $e) {
+				$outputUtil->printLine($e->getMessage());
+			}
+			if (! $response) {
+				$outputUtil->printLine('Failed to upload ' . $filePath);
+				return false;
+			}
+		}
 
 		return true;
 	}
@@ -64,7 +97,7 @@ class Deploy extends BaseCommand
 		return $success;
 	}
 
-	private function getFileSystem(): ?Filesystem
+	private function getSftpFileSystem(): ?Filesystem
 	{
 		if (! $this->sftpFileSystem) {
 			$adapter = $this->config->getItem('sftp_adapter');
