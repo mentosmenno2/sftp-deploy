@@ -115,6 +115,12 @@ class Build extends BaseCommand
 		$repoDirectory .= $pathUtil->trailingSlash($this->config->getItem('repo_clone_directory'));
 		$repoCheckout = $this->config->getItem('repo_checkout');
 
+		// If no repo url, skip
+		if (null === $repoUrl) {
+			$outputUtil->printLine('No repo url defined, skipping.');
+			return true;
+		}
+
 		// Create repo directory
 		if (! is_dir($repoDirectory)) {
 			$created = mkdir($repoDirectory, 0777, true);
