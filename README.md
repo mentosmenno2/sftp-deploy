@@ -6,17 +6,6 @@ Deploy applications via SFTP
 
 ## Installation
 
-Add the repo to the project by adding this in the `composer.json` file.
-
-```json
-"repositories": [
-	{
-		"url": "https://github.com/mentosmenno2/sftp-deploy.git",
-		"type": "git"
-	}
-]
-```
-
 Install this dependency with composer as dev-dependency.
 
 ```sh
@@ -31,4 +20,46 @@ Add the commands to the Composer scripts by adding this in the `composer.json` f
 		"sftp-deploy"
 	]
 }
+```
+
+## Configuration
+
+Generate a configuration file.
+
+```sh
+composer run sftp-deploy init
+```
+
+Open the generated `` file, and edit the properties following the specification below.
+
+## Commands
+
+All commands can be run in the following way:
+
+```sh
+composer run sftp-deploy COMMAND_NAME
+```
+
+### Init
+
+Generate a configuration file.
+
+```sh
+composer run sftp-deploy init
+```
+
+### Build
+
+Build the application.
+
+```sh
+composer run sftp-deploy build
+```
+
+### Deploy
+
+Build and deploy the application to a (S)FTP server.
+
+```sh
+composer run sftp-deploy deploy
 ```
