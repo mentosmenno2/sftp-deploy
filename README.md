@@ -30,29 +30,29 @@ Open the generated `sftp-deploy.config.json` file, and edit the properties follo
 
 ### Configuration file properties
 
-| Property 						| Type 			| Default 				| Description 																							|
-|--- 							|--- 			|--- 					|--- 																									|
-| builds_directory 				| string 		| `"deployments"` 		| The path where the the build will be created. Relative to your project directory.						|
-| builds_use_subdirectory 		| boolean 		| `true` 				| Will make a separate subdirectory inside the `builds_directory` for your build. 						|
-| builds_keep_revisions 		| integer 		| `5` 					| Revisions of builds to keep when cleaning up builds. 													|
-| run_before 					| [] string 		| `[]` 					| Commands to run before cloning your project from git 													|
-| repo_url 						| string / null | `null` 				| Repository url to use for cloning your project from git. 												|
-| repo_clone_directory 			| string 		| `"."` 				| Path to clone the repo in. Relative to the `builds_directory` (with subdirectory if enabled). 		|
-| repo_checkout 				| string 		| `"master"` 			| Default branch or tag to checkout when cloning the repo. 												|
-| run_after 					| [] string 		| `[]` 					| Commands to run after cloning your project from git. 													|
-| deploy_directory 				| string 		| `"."` 				| Directory to upload to (S)FTP. Relative to the `builds_directory` (with subdirectory if enabled). 	|
-| sftp_adapter 					| string 		| `"sftp"` 				| Options: `sftp`, `ftp`. Adapter to choose for deploying. 												|
-| sftp_host 					| string 		| `"example.com"` 		| (S)FTP host. 																							|
-| sftp_port 					| integer 		| `22` 					| (S)FTP port. SFTP usually uses `22`. FPT usually uses `21`. 											|
-| sftp_username 				| string 		| `"username"` 			| (S)FTP username. 																						|
-| sftp_password 				| string 		| `"password"` 			| (S)FTP password. 																						|
-| sftp_root 					| string 		| `"/path/to/root"` 	| Path where files from `deploy_directory` should be placed. Absolute path from (S)FTP root. 			|
-| sftp_passive	 				| boolean 		| `true` 				| Use a passive connection. Only works when `ftp` is selected as `sftp_adapter`. 						|
-| sftp_ssl	 					| boolean 		| `true` 				| Use a SSL connection. Only works when `ftp` is selected as `sftp_adapter`. 							|
-| sftp_ignore_passive_address 	| boolean 		| `false` 				| Don't use passive address. Useful when connection is blocked by firewall. Only works when `ftp` is selected as `sftp_adapter`. 	|
-| sftp_private_key_file 		| string / null | `null` 				| Path to private key file. Absolute path. Only works when `sftp` is selected as `sftp_adapter`. 		|
-| sftp_private_key_password 	| string / null | `null` 				| Private key password. Only works when `sftp` is selected as `sftp_adapter`. 							|
-| sftp_directory_permission 	| integer 		| `0755` 				| Set directory permission of `sftp_root`. 																|
+| Property 							| Type 			| Default 				| Description 																							|
+|--- 								|--- 			|--- 					|--- 																									|
+| __builds_directory__ 				| string 		| `"deployments"` 		| The path where the the build will be created. Relative to your project directory.						|
+| __builds_use_subdirectory__ 		| boolean 		| `true` 				| Will make a separate subdirectory inside the `builds_directory` for your build. 						|
+| __builds_keep_revisions__ 		| integer 		| `5` 					| Revisions of builds to keep when cleaning up builds. 													|
+| __run_before__ 					| [] string 	| `[]` 					| Commands to run before cloning your project from git 													|
+| __repo_url__ 						| string / null | `null` 				| Repository url to use for cloning your project from git. 												|
+| __repo_clone_directory__ 			| string 		| `"."` 				| Path to clone the repo in. Relative to the `builds_directory` (with subdirectory if enabled). 		|
+| __repo_checkout__ 				| string 		| `"master"` 			| Default branch or tag to checkout when cloning the repo. 												|
+| __run_after__ 					| [] string 	| `[]` 					| Commands to run after cloning your project from git. 													|
+| __deploy_directory__ 				| string 		| `"."` 				| Directory to upload to (S)FTP. Relative to the `builds_directory` (with subdirectory if enabled). 	|
+| __sftp_adapter__ 					| string 		| `"sftp"` 				| Options: `sftp`, `ftp`. Adapter to choose for deploying. 												|
+| __sftp_host__ 					| string 		| `"example.com"` 		| (S)FTP host. 																							|
+| __sftp_port__ 					| integer 		| `22` 					| (S)FTP port. SFTP usually uses `22`. FPT usually uses `21`. 											|
+| __sftp_username__ 				| string 		| `"username"` 			| (S)FTP username. 																						|
+| __sftp_password__ 				| string 		| `"password"` 			| (S)FTP password. 																						|
+| __sftp_root__ 					| string 		| `"/path/to/root"` 	| Path where files from `deploy_directory` should be placed. Absolute path from (S)FTP root. 			|
+| __sftp_passive__	 				| boolean 		| `true` 				| Use a passive connection. Only works when `ftp` is selected as `sftp_adapter`. 						|
+| __sftp_ssl__	 					| boolean 		| `true` 				| Use a SSL connection. Only works when `ftp` is selected as `sftp_adapter`. 							|
+| __sftp_ignore_passive_address__ 	| boolean 		| `false` 				| Don't use passive address. Useful when connection is blocked by firewall. Only works when `ftp` is selected as `sftp_adapter`. 	|
+| __sftp_private_key_file__ 		| string / null | `null` 				| Path to private key file. Absolute path. Only works when `sftp` is selected as `sftp_adapter`. 		|
+| __sftp_private_key_password__ 	| string / null | `null` 				| Private key password. Only works when `sftp` is selected as `sftp_adapter`. 							|
+| __sftp_directory_permission__ 	| integer 		| `0755` 				| Set directory permission of `sftp_root`. 																|
 
 ## Commands
 
