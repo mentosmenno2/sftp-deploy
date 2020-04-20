@@ -31,6 +31,47 @@ class Cleanup extends BaseCommand
 
 	private function cleanupBuilds(): bool
 	{
+		$outputUtil = new OutputUtil();
+		$pathUtil = new PathUtil();
+
+		$basebuildPath = $pathUtil->realPath($this->config->getBaseBuildPath());
+		if ($this->config->getItem('builds_use_subdirectory')) {
+			$success = $this->cleanupSubdirectoryBuilds();
+			if (! $success) {
+				$outputUtil->printLine('Could not cleanup builds in buildpath subdirectories.');
+				return false;
+			}
+		} else {
+			$success = $pathUtil->deleteContents($basebuildPath);
+			if (! $success) {
+				$outputUtil->printLine('Could not cleanup build in buildpath root.');
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function cleanupSubdirectoryBuilds(): bool
+	{
+		$outputUtil = new OutputUtil();
+		$pathUtil = new PathUtil();
+		$basebuildPath = $pathUtil->realPath($this->config->getBaseBuildPath());
+
+		$builds = $pathUtil->getContentPaths($basebuildPath);
+		$revisions = $this->config->getItem('builds_revisions');
+		$buildsCount = count($builds);
+		$buildsToDelete = $buildsCount - min($revisions, $buildsCount);
+
+		if ($buildsToDelete > 0) {
+			for ($buildIndex = 0; $buildIndex < $buildsToDelete; $buildIndex++) {
+				$buildToDelete = $pathUtil->realPath($builds[$buildIndex]);
+				$success = $pathUtil->deleteWithContents($buildToDelete);
+				if (! $success) {
+					$outputUtil->printLine('Could not cleanup build in buildpath subdirectory: ' . $buildToDelete);
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 

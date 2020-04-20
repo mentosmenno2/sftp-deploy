@@ -54,7 +54,7 @@ class Deploy extends BaseCommand
 		$deployPath = $this->config->getDeployPath();
 		$deployPath = $pathUtil->realPath($deployPath);
 		$deployPath = $pathUtil->trailingSlash($deployPath);
-		$deployPathContents = $pathUtil->getContents($deployPath);
+		$deployPathContents = $pathUtil->getRecursiveContentPaths($deployPath);
 
 		// Extract files
 		$filesToUpload = array_filter($deployPathContents, function ($dirOrFilePath) {
