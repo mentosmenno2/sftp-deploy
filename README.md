@@ -30,7 +30,29 @@ Open the generated `sftp-deploy.config.json` file, and edit the properties follo
 
 ### Configuration file properties
 
-- TODO: Properties
+| Property 						| Type 			| Default 				| Description 																							|
+|--- 							|--- 			|--- 					|--- 																									|
+| builds_directory 				| string 		| `"deployments"` 		| The path where the the build will be created. Relative to your project directory.						|
+| builds_use_subdirectory 		| boolean 		| `true` 				| Will make a separate subdirectory inside the `builds_directory` for your build. 						|
+| builds_keep_revisions 		| integer 		| `5` 					| Revisions of builds to keep when cleaning up builds. 													|
+| run_before 					| [] string 		| `[]` 					| Commands to run before cloning your project from git 													|
+| repo_url 						| string / null | `null` 				| Repository url to use for cloning your project from git. 												|
+| repo_clone_directory 			| string 		| `"."` 				| Path to clone the repo in. Relative to the `builds_directory` (with subdirectory if enabled). 		|
+| repo_checkout 				| string 		| `"master"` 			| Default branch or tag to checkout when cloning the repo. 												|
+| run_after 					| [] string 		| `[]` 					| Commands to run after cloning your project from git. 													|
+| deploy_directory 				| string 		| `"."` 				| Directory to upload to (S)FTP. Relative to the `builds_directory` (with subdirectory if enabled). 	|
+| sftp_adapter 					| string 		| `"sftp"` 				| Options: `sftp`, `ftp`. Adapter to choose for deploying. 												|
+| sftp_host 					| string 		| `"example.com"` 		| (S)FTP host. 																							|
+| sftp_port 					| integer 		| `22` 					| (S)FTP port. SFTP usually uses `22`. FPT usually uses `21`. 											|
+| sftp_username 				| string 		| `"username"` 			| (S)FTP username. 																						|
+| sftp_password 				| string 		| `"password"` 			| (S)FTP password. 																						|
+| sftp_root 					| string 		| `"/path/to/root"` 	| Path where files from `deploy_directory` should be placed. Absolute path from (S)FTP root. 			|
+| sftp_passive	 				| boolean 		| `true` 				| Use a passive connection. Only works when `ftp` is selected as `sftp_adapter`. 						|
+| sftp_ssl	 					| boolean 		| `true` 				| Use a SSL connection. Only works when `ftp` is selected as `sftp_adapter`. 							|
+| _sftp_ignore_passive_address_ 	| boolean 		| `false` 				| Don't use passive address. Useful when connection is blocked by firewall. Only works when `ftp` is selected as `sftp_adapter`. 	|
+| sftp_private_key_file 		| string / null | `null` 				| Path to private key file. Absolute path. Only works when `sftp` is selected as `sftp_adapter`. 		|
+| sftp_private_key_password 	| string / null | `null` 				| Private key password. Only works when `sftp` is selected as `sftp_adapter`. 							|
+| sftp_directory_permission 	| integer 		| `0755` 				| Set directory permission of `sftp_root`. 																|
 
 ## Commands
 
@@ -53,8 +75,13 @@ composer run sftp-deploy init
 Build the application.
 
 ```sh
-composer run sftp-deploy build
+composer run sftp-deploy build [checkout]
 ```
+
+#### Arguments
+| Argument 	| Required 	| Default 	| Description 												|
+|--- 		|--- 		|--- 		|--- 														|
+| checkout 	| No 		| master 	| The branch or tag you would like to checkout with git. Overwrites `repo_checkout` configuration parameter. 	|
 
 ### Deploy
 
@@ -66,8 +93,13 @@ Build and deploy the application to a (S)FTP server.
 > - Finally cleans up old builds with the `cleanup` command.
 
 ```sh
-composer run sftp-deploy deploy
+composer run sftp-deploy deploy [checkout]
 ```
+
+#### Arguments
+| Argument 	| Required 	| Default 	| Description 												|
+|--- 		|--- 		|--- 		|--- 														|
+| checkout 	| No 		| master 	| The branch or tag you would like to checkout with git. Overwrites `repo_checkout` configuration parameter. 	|
 
 ### Cleanup
 
