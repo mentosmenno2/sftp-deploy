@@ -43,7 +43,7 @@ class Config
 		return [
 			'builds_directory' => 'deployments',
 			'builds_use_subdirectory' => true,
-			'builds_revisions' => 5,
+			'builds_keep_revisions' => 5,
 			'run_before' => [],
 			'repo_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
 			'repo_clone_directory' => '.',

@@ -54,7 +54,7 @@ class Cleanup extends BaseCommand
 		$basebuildPath = $pathUtil->trailingSlash($basebuildPath);
 
 		$builds = $pathUtil->getContentPaths($basebuildPath);
-		$revisions = $this->config->getItem('builds_revisions');
+		$revisions = $this->config->getItem('builds_keep_revisions');
 		$buildsCount = count($builds);
 		$buildsToDelete = $buildsCount - min($revisions, $buildsCount);
 
