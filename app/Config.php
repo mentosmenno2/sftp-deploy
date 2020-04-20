@@ -33,6 +33,11 @@ class Config
 		return $this->cliArgs;
 	}
 
+	public function getCliArg(int $arg): ?string
+	{
+		return isset($this->cliArgs[$arg]) ? $this->cliArgs[$arg] : null;
+	}
+
 	private function getDefault(): array
 	{
 		return [

@@ -114,6 +114,9 @@ class Build extends BaseCommand
 		$repoDirectory = $pathUtil->trailingSlash($this->config->getBuildPath());
 		$repoDirectory .= $pathUtil->trailingSlash($this->config->getItem('repo_clone_directory'));
 		$repoCheckout = $this->config->getItem('repo_checkout');
+		if (! empty($this->config->getCliArg(1))) {
+			$repoCheckout = $this->config->getCliArg(1);
+		}
 
 		// If no repo url, skip
 		if (null === $repoUrl) {
