@@ -2,7 +2,7 @@
 
 # Mentosmenno2 SFTP Deploy
 
-Build and deploy PHP applications via (S)FTP.
+Build and deploy PHP applications via (S)FTP, with a simple command!
 
 ## Installation
 
