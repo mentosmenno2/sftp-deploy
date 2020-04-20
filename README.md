@@ -49,7 +49,7 @@ Open the generated `sftp-deploy.config.json` file, and edit the properties follo
 | sftp_root 					| string 		| `"/path/to/root"` 	| Path where files from `deploy_directory` should be placed. Absolute path from (S)FTP root. 			|
 | sftp_passive	 				| boolean 		| `true` 				| Use a passive connection. Only works when `ftp` is selected as `sftp_adapter`. 						|
 | sftp_ssl	 					| boolean 		| `true` 				| Use a SSL connection. Only works when `ftp` is selected as `sftp_adapter`. 							|
-| _sftp_ignore_passive_address_ 	| boolean 		| `false` 				| Don't use passive address. Useful when connection is blocked by firewall. Only works when `ftp` is selected as `sftp_adapter`. 	|
+| sftp_ignore_passive_address 	| boolean 		| `false` 				| Don't use passive address. Useful when connection is blocked by firewall. Only works when `ftp` is selected as `sftp_adapter`. 	|
 | sftp_private_key_file 		| string / null | `null` 				| Path to private key file. Absolute path. Only works when `sftp` is selected as `sftp_adapter`. 		|
 | sftp_private_key_password 	| string / null | `null` 				| Private key password. Only works when `sftp` is selected as `sftp_adapter`. 							|
 | sftp_directory_permission 	| integer 		| `0755` 				| Set directory permission of `sftp_root`. 																|
