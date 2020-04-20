@@ -37,6 +37,13 @@ class Deploy extends BaseCommand
 			return $response;
 		}
 
+		// Run cleanup
+		$cleanupCommand = new Cleanup($this->config);
+		$response = $cleanupCommand->run();
+		if ($response->hasErrors()) {
+			return $response;
+		}
+
 		$outputUtil->printNotification('Project successfully deployed.');
 		return $response;
 	}
