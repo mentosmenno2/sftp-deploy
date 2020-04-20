@@ -19,8 +19,8 @@ class Cleanup extends BaseCommand
 
 		// Deploy project
 		$outputUtil->printLine('Cleaning up builds.');
-		$projectDeployed = $this->cleanupBuilds();
-		if (! $projectDeployed) {
+		$buildsCleaned = $this->cleanupBuilds();
+		if (! $buildsCleaned) {
 			$response->addError('Cleaning up buils failed.');
 			return $response;
 		}
@@ -32,21 +32,15 @@ class Cleanup extends BaseCommand
 	private function cleanupBuilds(): bool
 	{
 		$outputUtil = new OutputUtil();
-		$pathUtil = new PathUtil();
+		if (! $this->config->getItem('builds_use_subdirectory')) {
+			$outputUtil->printLine('Skipping cleanup because you are not using buildpath subdirectories.');
+			return true;
+		}
 
-		$basebuildPath = $pathUtil->realPath($this->config->getBaseBuildPath());
-		if ($this->config->getItem('builds_use_subdirectory')) {
-			$success = $this->cleanupSubdirectoryBuilds();
-			if (! $success) {
-				$outputUtil->printLine('Could not cleanup builds in buildpath subdirectories.');
-				return false;
-			}
-		} else {
-			$success = $pathUtil->deleteContents($basebuildPath);
-			if (! $success) {
-				$outputUtil->printLine('Could not cleanup build in buildpath root.');
-				return false;
-			}
+		$success = $this->cleanupSubdirectoryBuilds();
+		if (! $success) {
+			$outputUtil->printLine('Could not cleanup builds in buildpath subdirectories.');
+			return false;
 		}
 		return true;
 	}
@@ -55,7 +49,9 @@ class Cleanup extends BaseCommand
 	{
 		$outputUtil = new OutputUtil();
 		$pathUtil = new PathUtil();
-		$basebuildPath = $pathUtil->realPath($this->config->getBaseBuildPath());
+		$basebuildPath = $this->config->getBaseBuildPath();
+		$basebuildPath = $pathUtil->realPath($basebuildPath);
+		$basebuildPath = $pathUtil->trailingSlash($basebuildPath);
 
 		$builds = $pathUtil->getContentPaths($basebuildPath);
 		$revisions = $this->config->getItem('builds_revisions');
@@ -65,12 +61,15 @@ class Cleanup extends BaseCommand
 		if ($buildsToDelete > 0) {
 			for ($buildIndex = 0; $buildIndex < $buildsToDelete; $buildIndex++) {
 				$buildToDelete = $pathUtil->realPath($builds[$buildIndex]);
+				$outputUtil->printLine('Cleaning up: ' . $buildToDelete);
 				$success = $pathUtil->deleteWithContents($buildToDelete);
 				if (! $success) {
 					$outputUtil->printLine('Could not cleanup build in buildpath subdirectory: ' . $buildToDelete);
 					return false;
 				}
 			}
+		} else {
+			$outputUtil->printLine('No builds to cleanup.');
 		}
 		return true;
 	}
