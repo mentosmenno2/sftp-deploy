@@ -28,24 +28,24 @@ class App
 	{
 		// Set config
 		$this->config = new Config();
-		$cliArgs = $this->config->getCliArgs();
+		$cliCommandArg = $this->config->getCliArg(0);
 
 		$command_response = new CommandResponse();
 
 		// Check if command is given
-		if (!isset($cliArgs[0])) {
+		if (!isset($cliCommandArg)) {
 			$command_response->addError('No command chosen.');
 			return $this->handleResponse($command_response);
 		}
 
 		// Check if command exists
-		if (! array_key_exists($cliArgs[0], self::COMMANDS)) {
+		if (! array_key_exists($cliCommandArg, self::COMMANDS)) {
 			$command_response->addError('Command doesn\'t exist.');
 			return $this->handleResponse($command_response);
 		}
 
 		// Run command
-		$commandClassName = self::COMMANDS[$cliArgs[0]];
+		$commandClassName = self::COMMANDS[$cliCommandArg];
 		$command = new $commandClassName($this->config);
 		$command_response = $command->run();
 
