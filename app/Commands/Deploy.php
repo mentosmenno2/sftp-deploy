@@ -37,6 +37,13 @@ class Deploy extends BaseCommand
 			return $response;
 		}
 
+		// Run cleanup
+		$cleanupCommand = new Cleanup($this->config);
+		$response = $cleanupCommand->run();
+		if ($response->hasErrors()) {
+			return $response;
+		}
+
 		$outputUtil->printNotification('Project successfully deployed.');
 		return $response;
 	}
@@ -54,7 +61,7 @@ class Deploy extends BaseCommand
 		$deployPath = $this->config->getDeployPath();
 		$deployPath = $pathUtil->realPath($deployPath);
 		$deployPath = $pathUtil->trailingSlash($deployPath);
-		$deployPathContents = $pathUtil->getContents($deployPath);
+		$deployPathContents = $pathUtil->getRecursiveContentPaths($deployPath);
 
 		// Extract files
 		$filesToUpload = array_filter($deployPathContents, function ($dirOrFilePath) {

@@ -60,18 +60,18 @@ class Path
 		return $relative;
 	}
 
-	public function getContents($path): array
+	public function getRecursiveContentPaths($path): array
 	{
 		$result = array();
 		$path = $this->realPath($path);
 		$path = $this->trailingSlash($path);
 
-		$recursive = $this->getContentsRecursive($path);
+		$recursive = $this->getRecursiveContent($path);
 		foreach ($recursive as $subdir => $contents) {
 			if (is_array($contents)) {
 				// Directory
 				$subdirPath = $this->trailingSlash($subdir);
-				$result = array_merge($result, $this->getContents($path . $subdirPath));
+				$result = array_merge($result, $this->getRecursiveContentPaths($path . $subdirPath));
 			} else {
 				// File
 				$result[] = $this->realPath($path . $contents);
@@ -81,7 +81,7 @@ class Path
 		return $result;
 	}
 
-	public function getContentsRecursive($path): array
+	public function getRecursiveContent($path): array
 	{
 		$result = array();
 		$path = $this->realPath($path);
@@ -95,13 +95,48 @@ class Path
 		foreach ($cdir as $key => $value) {
 			if (!in_array($value, array(".",".."))) {
 				if (is_dir($path . $value)) {
-					$result[$value] = $this->getContentsRecursive($path . $value);
+					$result[$value] = $this->getRecursiveContent($path . $value);
 				} else {
 					$result[] = $value;
 				}
 			}
 		}
 
+		return $result;
+	}
+
+	public function getContentPaths($path): array
+	{
+		$result = array();
+		$path = $this->realPath($path);
+		$path = $this->trailingSlash($path);
+
+		$contents = $this->getContent($path);
+		foreach ($contents as $index => $content_item) {
+			$resultPath = $this->realPath($path . $content_item);
+			$resultPath = $this->trailingSlash($resultPath);
+			$result[] = $resultPath;
+		}
+
+		return $result;
+	}
+
+	public function getContent($path): array
+	{
+		$result = array();
+		$path = $this->realPath($path);
+		$path = $this->trailingSlash($path);
+
+		$cdir = scandir($path);
+		if (! $cdir) {
+			return $result;
+		}
+
+		foreach ($cdir as $key => $value) {
+			if (!in_array($value, array(".",".."))) {
+				$result[] = $value;
+			}
+		}
 		return $result;
 	}
 

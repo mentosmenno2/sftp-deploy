@@ -5,6 +5,7 @@ namespace Mentosmenno2\SFTPDeploy;
 use Mentosmenno2\SFTPDeploy\Commands\Init as InitCommand;
 use Mentosmenno2\SFTPDeploy\Commands\Build as BuildCommand;
 use Mentosmenno2\SFTPDeploy\Commands\Deploy as DeployCommand;
+use Mentosmenno2\SFTPDeploy\Commands\Cleanup as CleanupCommand;
 use Mentosmenno2\SFTPDeploy\Models\CommandResponse;
 use Mentosmenno2\SFTPDeploy\Utils\Output as OutputUtil;
 use Mentosmenno2\SFTPDeploy\Utils\Shell as ShellUtil;
@@ -15,6 +16,7 @@ class App
 		'init' => InitCommand::class,
 		'build' => BuildCommand::class,
 		'deploy' => DeployCommand::class,
+		'cleanup' => CleanupCommand::class,
 	];
 
 	/**

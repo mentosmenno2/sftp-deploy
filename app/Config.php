@@ -42,7 +42,8 @@ class Config
 	{
 		return [
 			'builds_directory' => 'deployments',
-			'use_build_subdirectory' => true,
+			'builds_use_subdirectory' => true,
+			'builds_revisions' => 5,
 			'run_before' => [],
 			'repo_url' => 'https://github.com/mentosmenno2/sftp-deploy.git',
 			'repo_clone_directory' => '.',
@@ -140,17 +141,24 @@ class Config
 		return $this->basePath;
 	}
 
+	public function getBaseBuildPath(): string
+	{
+		$pathUtil = new PathUtil();
+		$buildPath = '';
+		if (! $pathUtil->isRootPath($this->getItem('builds_directory'))) {
+			$buildPath .= $pathUtil->trailingSlash($this->getBasePath());
+		}
+		$buildPath .= $pathUtil->trailingSlash($this->getItem('builds_directory'));
+		return $buildPath;
+	}
+
 	public function getBuildPath(): string
 	{
 		if (! $this->buildPath) {
 			$pathUtil = new PathUtil();
-			$buildPath = '';
-			if (! $pathUtil->isRootPath($this->getItem('builds_directory'))) {
-				$buildPath .= $pathUtil->trailingSlash($this->getBasePath());
-			}
-			$buildPath .= $pathUtil->trailingSlash($this->getItem('builds_directory'));
+			$buildPath = $this->getBaseBuildPath();
 
-			if ($this->getItem('use_build_subdirectory')) {
+			if ($this->getItem('builds_use_subdirectory')) {
 				$subDirName = ( new DateTime() )->format('YmdHis');
 				$buildPath .= $pathUtil->trailingSlash($subDirName);
 			}
