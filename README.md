@@ -4,6 +4,10 @@
 
 Build and deploy PHP applications via (S)FTP, with a simple command!
 
+## Requirements
+
+- PHP 7.1+
+
 ## Installation
 
 Install this dependency with composer as dev-dependency.
