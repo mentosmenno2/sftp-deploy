@@ -60,6 +60,23 @@ composer run sftp-deploy build
 
 Build and deploy the application to a (S)FTP server.
 
+> __Does these actions:__
+> - First builds your app with the `build` command.
+> - Then deploys that build to the (S)FTP server.
+> - Finally cleans up old builds with the `cleanup` command.
+
+```sh
+composer run sftp-deploy deploy
+```
+
+### Cleanup
+
+Cleanup old builds.
+
+> __Notes:__
+> - This only works when `builds_use_subdirectory` is enabled in the configuration.
+> - Keeps up to `builds_keep_revisions` intact. See configuration.
+
 ```sh
 composer run sftp-deploy deploy
 ```
