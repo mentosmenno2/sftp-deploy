@@ -22,6 +22,9 @@ Add the commands to the Composer scripts by adding this in the `composer.json` f
 "scripts": {
 	"sftp-deploy" : [
 		"sftp-deploy"
+	],
+	"deploy": [
+		"@sftp-deploy deploy"
 	]
 }
 ```
@@ -57,6 +60,17 @@ Open the generated `sftp-deploy.config.json` file, and edit the properties follo
 | __sftp_private_key_file__ 		| string / null | `null` 				| Path to private key file. Absolute path. Only works when `sftp` is selected as `sftp_adapter`. 		|
 | __sftp_private_key_password__ 	| string / null | `null` 				| Private key password. Only works when `sftp` is selected as `sftp_adapter`. 							|
 | __sftp_directory_permission__ 	| integer 		| `0755` 				| Set directory permission of `sftp_root`. 																|
+
+
+You can also use a custom configuration file. To do so, you can specify your custom configuration file, using the `config` operand. If you do so, you should also change the current deploy command (see installation section), or create a new one.
+
+```json
+"scripts": {
+	"deploy": [
+		"@sftp-deploy deploy -- --config=\"custom-config-filename.json\""
+	]
+}
+```
 
 ## Commands
 

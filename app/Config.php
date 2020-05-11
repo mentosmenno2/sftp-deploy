@@ -38,6 +38,30 @@ class Config
 		return isset($this->cliArgs[$arg]) ? $this->cliArgs[$arg] : null;
 	}
 
+	public function getOperands(): array
+	{
+		$operands = array();
+		$cliArgs = $this->getCliArgs();
+		foreach ($cliArgs as $cliArg) {
+			if (strpos($cliArg, '=') === false) {
+				continue;
+			}
+			$parts = explode('=', $cliArg, 2); // Only alow 2 items in array
+			$key = ltrim($parts[0], '-'); // strip left dashes of key
+			$operands[$key] = trim($parts[1], '"\'');
+		}
+		return $operands;
+	}
+
+	public function getOperand(string $operand): ?string
+	{
+		$operands = $this->getOperands();
+		if (array_key_exists($operand, $operands)) {
+			return $operands[$operand];
+		}
+		return null;
+	}
+
 	private function getDefault(): array
 	{
 		return [
@@ -76,6 +100,7 @@ class Config
 	private function getFromFile(): array
 	{
 		$fileName = $this->getFileName();
+
 		$jsonString = file_get_contents($fileName);
 		if (! $jsonString) {
 			return array();
@@ -130,7 +155,14 @@ class Config
 	private function getFileName(): string
 	{
 		$pathUtil = new PathUtil();
-		$fileName = $pathUtil->trailingSlash($this->getBasePath()) . Config::FILENAMME;
+
+		$baseFileName = Config::FILENAMME;
+		$fileNameFromOperand = $this->getOperand('config');
+		if ($fileNameFromOperand) {
+			$baseFileName = $fileNameFromOperand;
+		}
+
+		$fileName = $pathUtil->trailingSlash($this->getBasePath()) . $baseFileName;
 		return $fileName;
 	}
 
