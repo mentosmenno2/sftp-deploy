@@ -38,8 +38,8 @@
         ],
         "fix" : [
             "phpcbf"
-		],
-		"sftp-deploy" : [
+        ],
+        "sftp-deploy" : [
             "sftp-deploy"
         ]
     },
