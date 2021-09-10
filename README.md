@@ -16,7 +16,7 @@ Install this dependency with composer as dev-dependency.
 composer require mentosmenno2/sftp-deploy --dev
 ```
 
-Add the commands to the Composer scripts by adding this in the `composer.json` file.
+Add the commands to the Composer scripts by adding this in the `composer.json` file. For long deploy processes, you may need to disable the process timeout as shown in the example deploy command below.
 
 ```json
 "scripts": {
@@ -24,6 +24,7 @@ Add the commands to the Composer scripts by adding this in the `composer.json` f
 		"sftp-deploy"
 	],
 	"deploy": [
+		"Composer\\Config::disableProcessTimeout",
 		"@sftp-deploy deploy"
 	]
 }
